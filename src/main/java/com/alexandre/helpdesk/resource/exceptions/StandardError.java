@@ -2,13 +2,14 @@ package com.alexandre.helpdesk.resource.exceptions;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 
 public class StandardError implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Timestamp timestamp;
+	private Date date;
 	private Integer status;
 	private String error;
 	private String message;
@@ -18,21 +19,21 @@ public class StandardError implements Serializable {
 		super();
 	}
 
-	public StandardError(Timestamp timestamp, Integer status, String error, String message, String path) {
+	public StandardError(Date date, Integer status, String error, String message, String path) {
 		super();
-		this.timestamp = timestamp;
+		this.date = date;
 		this.status = status;
 		this.error = error;
 		this.message = message;
 		this.path = path;
 	}
 
-	public Timestamp getTimestamp() {
-		return timestamp;
+	public Date getTimestamp() {
+		return date;
 	}
 
-	public void setTimestamp(Timestamp timestamp) {
-		this.timestamp = timestamp;
+	public void setTimestamp(Date date) {
+		this.date = date;
 	}
 
 	public Integer getStatus() {
