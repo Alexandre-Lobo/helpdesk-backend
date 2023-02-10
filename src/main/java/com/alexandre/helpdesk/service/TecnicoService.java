@@ -33,4 +33,11 @@ public class TecnicoService {
 		return ResponseEntity.ok().body(listDto);
 	}
 
+	public Tecnico create(TecnicoDto objDto) {
+		objDto.setId(null);
+		Tecnico newObj = new Tecnico(objDto);
+		
+		return repository.save(newObj);
+	}
+
 }

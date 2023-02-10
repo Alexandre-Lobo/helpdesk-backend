@@ -26,6 +26,7 @@ public class TecnicoDto implements Serializable {
 
 	public TecnicoDto() {
 		super();
+		addPerfil(Perfil.TECNICO);
 	}
 
 	
@@ -37,6 +38,7 @@ public class TecnicoDto implements Serializable {
 		this.email = tecnico.getEmail();
 		this.perfis = tecnico.getPerfis().stream().map(x -> x.getCodigo()).collect(Collectors.toSet());
 		this.dataCriacao = tecnico.getDataCriacao();
+		addPerfil(Perfil.TECNICO);
 	}
 
 
