@@ -1,5 +1,7 @@
 package com.alexandre.helpdesk.resource;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +14,7 @@ import com.alexandre.helpdesk.domain.dtos.TecnicoDto;
 import com.alexandre.helpdesk.service.TecnicoService;
 
 @RestController
-@RequestMapping(value="/tecnico")
+@RequestMapping(value="/tecnicos")
 public class TecnicoResource {
 	
 	@Autowired 
@@ -21,9 +23,11 @@ public class TecnicoResource {
 	@GetMapping(value="/{id}")
 	public ResponseEntity<TecnicoDto> findById(@PathVariable Integer id){
 		Tecnico obj = service.findById(id);
-		
 		return ResponseEntity.ok().body(new TecnicoDto(obj));
-		
 	}
-
+	
+	@GetMapping
+	public ResponseEntity<List<TecnicoDto>> findAll(){
+		return service.findAll();
+	}
 }
