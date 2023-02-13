@@ -1,7 +1,6 @@
 package com.alexandre.helpdesk.resource.exceptions;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 
 
