@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -48,6 +50,25 @@ public class TecnicoService {
 		return tecnicoRepository.save(newObj);
 	}
 
+	public Tecnico update(Integer id, @Valid TecnicoDto objDto) {
+		objDto.setId(id);
+		Tecnico oldObj = findById(id);
+		validarCpfEEmail(objDto);
+		oldObj = new Tecnico(objDto);
+		tecnicoRepository.save(oldObj);
+		return oldObj;
+	}
+	
+	public void delete(Integer id) {
+		Tecnico obj = findById(id);
+		if(obj.getChamados().size() > 0) {
+			throw new DataIntegrationViolationException("Técnico possui chamados e não pode ser deletado!");
+		}
+		
+		tecnicoRepository.delete(obj);
+		
+	}
+	
 	private void validarCpfEEmail(TecnicoDto objDto) {
 		Optional<Pessoa>obj = pessoaRepository.findByCpf(objDto.getCpf());
 		if (obj.isPresent() && obj.get().getId() != objDto.getId()) {
@@ -59,5 +80,9 @@ public class TecnicoService {
 			throw new DataIntegrationViolationException("Email já cadastrado no sistema");
 		}
 	}
+
+
+
+	
 
 }

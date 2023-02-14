@@ -3,6 +3,7 @@ package com.alexandre.helpdesk.resource.exceptions;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,14 @@ public class ResourceExceptionHandler {
 		}
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+	}
+	
+	@ExceptionHandler(ConstraintViolationException.class)
+	public ResponseEntity<StandardError> handleConstraintViolationException(ConstraintViolationException ex, HttpServletRequest request){
+		ValidationError error = new ValidationError(new Date(), HttpStatus.BAD_REQUEST.value(), 
+				"Validation Error", "Erro na validação dos campos", request.getRequestURI());
 		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	}
 
 }
