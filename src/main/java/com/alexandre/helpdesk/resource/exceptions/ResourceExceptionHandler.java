@@ -24,9 +24,7 @@ public class ResourceExceptionHandler {
 		StandardError error = new StandardError(new Date(), HttpStatus.NOT_FOUND.value(), 
 				"Object not found", ex.getMessage(), request.getRequestURI());
 				
-
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-		
 	}
 	
 	@ExceptionHandler(DataIntegrationViolationException.class)
@@ -34,10 +32,8 @@ public class ResourceExceptionHandler {
 		
 		StandardError error = new StandardError(new Date(), HttpStatus.BAD_REQUEST.value(), 
 				"Violação de dados", ex.getMessage(), request.getRequestURI());
-				
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-		
 	}
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
@@ -46,19 +42,19 @@ public class ResourceExceptionHandler {
 		ValidationError errors = new ValidationError(new Date(), HttpStatus.BAD_REQUEST.value(), 
 				"Validation Error", "Erro na validação dos campos", request.getRequestURI());
 				
-		for(FieldError x: ex.getBindingResult().getFieldErrors()) {
-			errors.addErrors(x.getField(), x.getDefaultMessage());
-		}
+		ex.getBindingResult().getFieldErrors().forEach(v ->errors.addErrors(v.getField(), v.getDefaultMessage())); 
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
 	}
 	
 	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<StandardError> handleConstraintViolationException(ConstraintViolationException ex, HttpServletRequest request){
-		ValidationError error = new ValidationError(new Date(), HttpStatus.BAD_REQUEST.value(), 
+		
+		ValidationError errors = new ValidationError(new Date(), HttpStatus.BAD_REQUEST.value(), 
 				"Validation Error", "Erro na validação dos campos", request.getRequestURI());
 		
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+		ex.getConstraintViolations().forEach(v -> errors.addErrors(v.getPropertyPath().toString(), v.getMessage()));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
 	}
 
 }
