@@ -8,11 +8,11 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
-import com.alexandre.helpdesk.domain.Tecnico;
+import com.alexandre.helpdesk.domain.Cliente;
 import com.alexandre.helpdesk.domain.enums.Perfil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class TecnicoDto implements Serializable {
+public class ClienteDto implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -20,7 +20,6 @@ public class TecnicoDto implements Serializable {
 	@NotNull (message = "O campo NOME é obrigatório")
 	protected String nome;
 	@NotNull (message = "O campo CPF é obrigatório")
-	
 	protected String cpf;
 	@NotNull (message = "O campo EMAIL é obrigatório")
 	protected String email;
@@ -31,13 +30,13 @@ public class TecnicoDto implements Serializable {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	protected LocalDate dataCriacao  = LocalDate.now();
 
-	public TecnicoDto() {
+	public ClienteDto() {
 		super();
 		addPerfil(Perfil.TECNICO);
 	}
 
 	
-	public TecnicoDto(Tecnico obj) {
+	public ClienteDto(Cliente obj) {
 		super();
 		this.id = obj.getId();
 		this.nome = obj.getNome();
@@ -46,10 +45,11 @@ public class TecnicoDto implements Serializable {
 		this.senha = obj.getSenha();
 		this.perfis = obj.getPerfis().stream().map(x -> x.getCodigo()).collect(Collectors.toSet());
 		this.dataCriacao = obj.getDataCriacao();
-		addPerfil(Perfil.TECNICO);
+		addPerfil(Perfil.CLIENTE);
 	}
 
 
+	
 	public Integer getId() {
 		return id;
 	}

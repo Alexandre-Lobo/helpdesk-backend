@@ -11,66 +11,65 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.alexandre.helpdesk.domain.Pessoa;
-import com.alexandre.helpdesk.domain.Tecnico;
-import com.alexandre.helpdesk.domain.dtos.TecnicoDto;
+import com.alexandre.helpdesk.domain.Cliente;
+import com.alexandre.helpdesk.domain.dtos.ClienteDto;
 import com.alexandre.helpdesk.repository.PessoaRepository;
-import com.alexandre.helpdesk.repository.TecnicoRepository;
+import com.alexandre.helpdesk.repository.ClienteRepository;
 import com.alexandre.helpdesk.service.exceptions.DataIntegrationViolationException;
 import com.alexandre.helpdesk.service.exceptions.ObjectNotFoundException;
 
 @Service
-public class TecnicoService {
+public class ClienteService {
 	
 	@Autowired
-	private TecnicoRepository repository;
+	private ClienteRepository repository;
 	
 	@Autowired
 	private PessoaRepository pessoaRepository;
 	
-	public Tecnico findById (Integer id) {
-		Optional<Tecnico> obj = repository.findById(id);
+	public Cliente findById (Integer id) {
+		Optional<Cliente> obj = repository.findById(id);
 		
 		return obj.orElseThrow(() -> new ObjectNotFoundException ("Objeto não encontrado! Id: " + id));
 	}
 
-	public ResponseEntity<List<TecnicoDto>> findAll() {
-		List<Tecnico>list = repository.findAll();
+	public ResponseEntity<List<ClienteDto>> findAll() {
+		List<Cliente>list = repository.findAll();
 		
-		List<TecnicoDto>listDto = list.stream().map(obj -> new TecnicoDto(obj)).collect(Collectors.toList());
+		List<ClienteDto>listDto = list.stream().map(obj -> new ClienteDto(obj)).collect(Collectors.toList());
 		
 		return ResponseEntity.ok().body(listDto);
 	}
-	
-	
-	public Tecnico create(TecnicoDto objDto) {
+
+	public Cliente create(ClienteDto objDto) {
 		objDto.setId(null);
 		
 		validarCpfEEmail(objDto);
-		Tecnico newObj = new Tecnico(objDto);
+		Cliente newObj = new Cliente(objDto);
 		
 		return repository.save(newObj);
 	}
 
-	
-	public Tecnico update(Integer id, @Valid TecnicoDto objDto) {
+	public Cliente update(Integer id, @Valid ClienteDto objDto) {
 		objDto.setId(id);
-		Tecnico oldObj = findById(id);
+		Cliente oldObj = findById(id);
 		validarCpfEEmail(objDto);
-		oldObj = new Tecnico(objDto);
-		return repository.save(oldObj);
+		oldObj = new Cliente(objDto);
+		repository.save(oldObj);
+		return oldObj;
 	}
 	
 	public void delete(Integer id) {
-		Tecnico obj = findById(id);
+		Cliente obj = findById(id);
 		if(obj.getChamados().size() > 0) {
-			throw new DataIntegrationViolationException("Técnico possui chamados e não pode ser deletado!");
+			throw new DataIntegrationViolationException("Cliente possui chamados e não pode ser deletado!");
 		}
 		
 		repository.delete(obj);
 		
 	}
 	
-	private void validarCpfEEmail(TecnicoDto objDto) {
+	private void validarCpfEEmail(ClienteDto objDto) {
 		Optional<Pessoa>obj = pessoaRepository.findByCpf(objDto.getCpf());
 		if (obj.isPresent() && obj.get().getId() != objDto.getId()) {
 			throw new DataIntegrationViolationException("Cpf já cadastrado no sistema");
