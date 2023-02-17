@@ -1,5 +1,6 @@
 package com.alexandre.helpdesk.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,14 @@ public class ChamadoService {
 		return repository.save(newChamado(objDto));
 	}
 	
+	public Chamado update(Integer id, @Valid ChamadoDto objDto) {
+		objDto.setId(id);
+		Chamado oldObj = findById(id);
+		oldObj = newChamado(objDto);
+		
+		return repository.save(oldObj);
+	}
+	
 	private Chamado newChamado(ChamadoDto obj) {
 		Tecnico tecnico = tecnicoService.findById(obj.getTecnico());
 		
@@ -54,6 +63,10 @@ public class ChamadoService {
 		
 		if (obj.getId() != null) {
 			chamado.setId(obj.getId());
+		}
+		
+		if (Status.ToEnum(obj.getStatus()) == Status.ENCERRADO) {
+			obj.setDataFechamento(LocalDate.now());
 		}
 		chamado.setTecnico(tecnico);
 		chamado.setCliente(cliente);
@@ -65,5 +78,7 @@ public class ChamadoService {
 		return chamado;
 		
 	}
+
+	
 	
 }
