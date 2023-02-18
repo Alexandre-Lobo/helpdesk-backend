@@ -66,7 +66,7 @@ public class ChamadoService {
 		}
 		
 		if (Status.ToEnum(obj.getStatus()) == Status.ENCERRADO) {
-			obj.setDataFechamento(LocalDate.now());
+			chamado.setDataFechamento(LocalDate.now());
 		}
 		chamado.setTecnico(tecnico);
 		chamado.setCliente(cliente);
