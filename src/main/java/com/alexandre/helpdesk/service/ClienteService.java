@@ -8,13 +8,14 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.alexandre.helpdesk.domain.Pessoa;
 import com.alexandre.helpdesk.domain.Cliente;
+import com.alexandre.helpdesk.domain.Pessoa;
 import com.alexandre.helpdesk.domain.dtos.ClienteDto;
-import com.alexandre.helpdesk.repository.PessoaRepository;
 import com.alexandre.helpdesk.repository.ClienteRepository;
+import com.alexandre.helpdesk.repository.PessoaRepository;
 import com.alexandre.helpdesk.service.exceptions.DataIntegrationViolationException;
 import com.alexandre.helpdesk.service.exceptions.ObjectNotFoundException;
 
@@ -23,9 +24,10 @@ public class ClienteService {
 	
 	@Autowired
 	private ClienteRepository repository;
-	
 	@Autowired
 	private PessoaRepository pessoaRepository;
+	@Autowired
+	BCryptPasswordEncoder encoder;
 	
 	public Cliente findById (Integer id) {
 		Optional<Cliente> obj = repository.findById(id);
@@ -43,7 +45,7 @@ public class ClienteService {
 
 	public Cliente create(ClienteDto objDto) {
 		objDto.setId(null);
-		
+		objDto.setSenha(encoder.encode(objDto.getSenha()));
 		validarCpfEEmail(objDto);
 		Cliente newObj = new Cliente(objDto);
 		
